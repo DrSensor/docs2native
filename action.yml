@@ -1,10 +1,23 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: docs2native
+description: Convert docs into a desktop app
+author: DrSensor
+branding:
+  icon: book-open
+  color: white
+
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  generator:
+    description: Static site generator to be used
+    default: auto
+  command:
+    description: Command for generating static site
+    required: false
+  docs:
+    description: Docs path or repository
+    required: true
+outputs:
+  path: Path to executable file 
+
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: node12
+  main: dist/index.js
