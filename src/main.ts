@@ -11,18 +11,19 @@ async function run(): Promise<void> {
     /* if (await docs.isHugoPath) generator = 'hugo' */
     core.debug(`static site generator: ${generator}`)
 
-    const result = async () => {
-      switch (generator) {
-        case 'hugo':
-          await hugo.install()
-          return hugo.build(docs)
-        default:
-          throw new Error(`\`generator: ${generator}}\` not supported`)
-      }
+    let result: string
+    switch (generator) {
+      case 'hugo':
+        await hugo.install()
+        result = await hugo.build(docs)
+        break
+      default:
+        throw new Error(`\`generator: ${generator}}\` not supported`)
     }
+    core.debug(`generated ${result}]`)
 
-    core.setOutput('path', await result())
     core.setOutput('name', generator)
+    core.setOutput('path', result)
   } catch (error) {
     core.setFailed(error.message)
   }
