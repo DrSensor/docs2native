@@ -1,16 +1,28 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import * as hugo from './hugo'
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`)
+    const generator = core.getInput('generator', {required: true})
+    const docs = core.getInput('docs', {required: true})
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    core.debug(`path: ${docs}`)
+    // TODO: support `generator: auto`
+    /* if (await docs.isHugoPath) generator = 'hugo' */
+    core.debug(`static site generator: ${generator}`)
 
-    core.setOutput('time', new Date().toTimeString())
+    const result = async () => {
+      switch (generator) {
+        case 'hugo':
+          await hugo.install()
+          return hugo.build(docs)
+        default:
+          throw new Error(`\`generator: ${generator}}\` not supported`)
+      }
+    }
+
+    core.setOutput('path', await result())
+    core.setOutput('name', generator)
   } catch (error) {
     core.setFailed(error.message)
   }

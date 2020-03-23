@@ -8,15 +8,15 @@ branding:
 inputs:
   generator:
     description: Static site generator to be used
-    default: auto
-  command:
-    description: Command for generating static site
-    required: false
+    required: true
   docs:
     description: Docs path or repository
     required: true
 outputs:
-  path: Path to executable file 
+  path:
+    description: Path to executable file
+  name:
+    description: Generator name
 
 runs:
   using: node12
