@@ -22,7 +22,6 @@ async function run(): Promise<void> {
     }
     core.debug(`generated ${result}]`)
 
-    core.setOutput('name', generator)
     core.setOutput('path', result)
   } catch (error) {
     core.setFailed(error.message)

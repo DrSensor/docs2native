@@ -21,8 +21,13 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Test this action
+      uses: ./
       with:
         docs: ./docs
         generator: hugo
+      id: docs
     - uses: actions/upload-artifact@v1
+      with:
+        name: hugo-${{ matrix.os }}
+        path: ${{ steps.docs.outputs.path }}

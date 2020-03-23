@@ -15,8 +15,6 @@ inputs:
 outputs:
   path:
     description: Path to executable file
-  name:
-    description: Generator name
 
 runs:
   using: node12
