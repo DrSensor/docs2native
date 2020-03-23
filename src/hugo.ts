@@ -3,7 +3,7 @@ import {exec} from '@actions/exec'
 import * as path from 'path'
 import * as os from 'os'
 
-export async function install() {
+export async function install(): Promise<void> {
   const platform = os.platform()
   switch (platform) {
     case 'linux':
@@ -18,16 +18,10 @@ export async function install() {
     default:
       throw new Error(`os '${platform}' not supported`)
   }
-  exec('hugo', ['--version'], {listeners: {stdline: core.info}})
 }
 
-export async function build(workdir: string): Promise<string> {
-  await exec('hugo', [], {
-    cwd: workdir,
-    listeners: {
-      stdout: data => core.info(data.toString()),
-      stderr: data => core.error(data.toString())
-    }
-  })
-  return path.resolve(workdir, '/public')
+export async function build(cwd: string): Promise<string> {
+  core.debug(`hugo build ${cwd}`)
+  await exec('hugo', [], {cwd})
+  return path.resolve(cwd, 'public')
 }
