@@ -7,7 +7,7 @@ export async function install() {
   const platform = os.platform()
   switch (platform) {
     case 'linux':
-      await exec('apt -y install hugo')
+      await exec('sudo snap install hugo')
       break
     case 'darwin':
       await exec('brew install hugo')
