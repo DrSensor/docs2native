@@ -7,13 +7,13 @@ export async function install() {
   const platform = os.platform()
   switch (platform) {
     case 'linux':
-      await exec('sudo snap install hugo')
+      await exec('sudo snap install hugo --channel=extended')
       break
     case 'darwin':
       await exec('brew install hugo')
       break
     case 'win32':
-      await exec('choco install hugo -confirm')
+      await exec('choco install hugo-extended -confirm')
       break
     default:
       throw new Error(`os '${platform}' not supported`)
