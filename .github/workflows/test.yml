@@ -10,8 +10,13 @@ jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - run: |-
+    - uses: actions/checkout@v2
+    - name: Prepare docs
+      run: |-
+        git clone https://github.com/gohugoio/hugoBasicExample.git   docs/hugo
+        git clone https://github.com/budparr/gohugo-theme-ananke.git docs/hugo/themes/ananke
+    - name: Unit tests
+      run: |-
         npm install
         npm run all
   test: # make sure the action works on a clean machine without building
@@ -20,11 +25,16 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+      with: { submodules: recursive }
+    - name: Prepare docs
+      run: |-
+        git clone https://github.com/gohugoio/hugoBasicExample.git   docs/hugo
+        git clone https://github.com/budparr/gohugo-theme-ananke.git docs/hugo/themes/ananke
     - name: Test this action
       uses: ./
       with:
-        docs: ./docs
+        docs: ./docs/hugo
         generator: hugo
       id: docs
     - uses: actions/upload-artifact@v1
