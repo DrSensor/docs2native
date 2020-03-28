@@ -7,25 +7,22 @@ on: # rebuild any PRs and main branch changes
       - 'releases/*'
 
 jobs:
-  build: # make sure build/ci work properly
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Prepare docs
-      run: |-
-        git clone https://github.com/gohugoio/hugoBasicExample.git   docs/hugo
-        git clone https://github.com/budparr/gohugo-theme-ananke.git docs/hugo/themes/ananke
-    - name: Unit tests
-      run: |-
-        npm install
-        npm run all
-  test: # make sure the action works on a clean machine without building
+  # unit-test: # make sure build/ci work properly
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - run: scripts/prepare-docs.sh ${{ matrix.generator }}
+  #   - run: npm install
+  #   - run: npm run all
   smoke-test: # make sure the action works on a clean machine without building
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os:
+        - ubuntu-latest
+        - windows-latest
+        - macos-latest
     steps:
     - uses: actions/checkout@v2
     - name: Prepare docs
