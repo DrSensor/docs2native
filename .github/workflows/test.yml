@@ -28,8 +28,8 @@ jobs:
     - name: Prepare docs
       shell: bash
       run: |-
-        git clone --depth 1 --no-checkout https://github.com/gohugoio/hugoBasicExample.git   docs/hugo
-        git clone --depth 1 --no-checkout https://github.com/budparr/gohugo-theme-ananke.git docs/hugo/themes/ananke
+        git clone --depth 1 https://github.com/gohugoio/hugoBasicExample.git   docs/hugo
+        git clone --depth 1 https://github.com/budparr/gohugo-theme-ananke.git docs/hugo/themes/ananke
         echo 'theme = "ananke"' | cat - docs/hugo/config.toml > docs/config.toml
         mv docs/config.toml docs/hugo/config.toml
     - name: Test this action
