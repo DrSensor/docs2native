@@ -3,18 +3,15 @@ import {exec} from '@actions/exec'
 import * as path from 'path'
 import * as os from 'os'
 
-export async function install(): Promise<void> {
+export async function install(): Promise<number> {
   const platform = os.platform()
   switch (platform) {
     case 'linux':
-      await exec('sudo snap install hugo --channel=extended')
-      break
+      return exec('sudo snap install hugo --channel=extended')
     case 'darwin':
-      await exec('brew install hugo')
-      break
+      return exec('brew install hugo')
     case 'win32':
-      await exec('choco install hugo-extended -confirm')
-      break
+      return exec('choco install hugo-extended -confirm')
     default:
       throw new Error(`os '${platform}' not supported`)
   }
