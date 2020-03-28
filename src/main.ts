@@ -1,4 +1,7 @@
+import {readFileSync, writeFileSync} from 'fs'
+import {join} from 'path'
 import * as core from '@actions/core'
+import {exec} from '@actions/exec'
 import * as hugo from './hugo'
 import * as tauri from './tauri'
 import tauriConf from './tauri.conf.json'
@@ -17,6 +20,17 @@ async function run(): Promise<void> {
       case 'hugo':
         await Promise.all([hugo.install(), tauri.install()])
 
+        core.debug(`===modify ${generator} config===`)
+        const hugoConfig = join(docs, 'config.toml')
+        const hugoConf = readFileSync(hugoConfig, 'utf-8')
+        writeFileSync(
+          hugoConfig,
+          hugoConf.replace(
+            /baseURL\s+=\s+".*"/,
+            `baseURL = "${tauriConf.build.devPath}"`
+          )
+        )
+        await exec('hugo', ['config'], {cwd: docs})
 
         tauriConf.build.distDir = await hugo.build(docs)
         tauriConf.tauri.window.title =
