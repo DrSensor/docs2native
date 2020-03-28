@@ -1,5 +1,7 @@
 import * as core from '@actions/core'
 import * as hugo from './hugo'
+import * as tauri from './tauri'
+import tauriConf from './tauri.conf.json'
 
 async function run(): Promise<void> {
   try {
@@ -11,16 +13,21 @@ async function run(): Promise<void> {
     /* if (await docs.isHugoPath) generator = 'hugo' */
     core.debug(`static site generator: ${generator}`)
 
-    let result: string
     switch (generator) {
       case 'hugo':
-        await hugo.install()
-        result = await hugo.build(docs)
+        await Promise.all([hugo.install(), tauri.install()])
+
+
+        tauriConf.build.distDir = await hugo.build(docs)
+        tauriConf.tauri.window.title =
+          hugoConf.match(/title = "(.*)"/)?.[1] ?? 'Hugo'
         break
       default:
         throw new Error(`\`generator: ${generator}}\` not supported`)
     }
-    core.debug(`generated ${result}]`)
+
+    const result = await tauri.build(docs, tauriConf)
+    core.debug(`executable:\n\t${result}]`)
 
     core.setOutput('path', result)
   } catch (error) {
